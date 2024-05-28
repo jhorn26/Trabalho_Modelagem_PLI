@@ -1,0 +1,27 @@
+{
+  "objective": {
+    "sense": "maximize",
+    "coefficients": [7.0, 9.0]
+  },
+  "variables": {
+    "bounds": [
+      {"type": "lo", "lower": 0.0, "upper": "inf"},
+      {"type": "lo", "lower": 0.0, "upper": "inf"}
+    ]
+  },
+  "constraints": [
+    {
+      "coefficients": [1.0, 1.0],
+      "bound": {"type": "le", "value": 8.0}
+    },
+    {
+      "coefficients": [0.0, 1.0],
+      "bound": {"type": "le", "value": 4.0}
+    },
+    {
+      "coefficients": [2.0, 3.0],
+      "bound": {"type": "le", "value": 19.0}
+    }
+  ]
+}
+
