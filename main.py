@@ -1,21 +1,10 @@
-import json
-import mosek
 import sys
 import argparse
+import mosek
+import json
 
-# Definimos uma constante para o valor de infinito (simbolicamente)
-inf = 0.0
-
-# Função para capturar a saída do MOSEK
-def streamprinter(text):
-    sys.stdout.write(text)
-    sys.stdout.flush()
-
-# Função para ler o problema a partir de um arquivo JSON
-def read_problem_from_json(file_path):
-    with open(file_path, 'r') as file:
-        problem = json.load(file)
-    return problem
+from scripts.read_file import read_problem_from_json, transform_problem_to_mosek
+from scripts.solve_problem_mosek import solve_problem_continuos, solve_problem_integer
 
 # Função para escrever a solução em um arquivo JSON
 def write_solution_to_json(input_file, output_file, solution):
@@ -28,83 +17,6 @@ def write_solution_to_json(input_file, output_file, solution):
     with open(output_file, 'w') as file:
         json.dump(problem, file, indent=4)
 
-# Função para resolver o problema usando o MOSEK
-def solve_problem(problem):
-    with mosek.Task() as task:
-        # Anexa um log de saída para a tarefa
-        task.set_Stream(mosek.streamtype.log, streamprinter)
-
-        # Define o sentido da função objetivo (maximizar ou minimizar)
-        obj_sense = mosek.objsense.maximize if problem['objective']['sense'] == 'maximize' else mosek.objsense.minimize
-        task.putobjsense(obj_sense)
-
-        # Coeficientes da função objetivo
-        c = problem['objective']['coefficients']
-        numvar = len(c)
-
-        # Definir limites das variáveis
-        bounds = problem['variables']['bounds']
-        bkx = []
-        blx = []
-        bux = []
-        for bound in bounds:
-            if bound['type'] == 'lo':
-                bkx.append(mosek.boundkey.lo)
-                blx.append(bound['lower'])
-                bux.append(inf if bound['upper'] == 'inf' else bound['upper'])
-            elif bound['type'] == 'ra':
-                bkx.append(mosek.boundkey.ra)
-                blx.append(bound['lower'])
-                bux.append(bound['upper'])
-            elif bound['type'] == 'fx':
-                bkx.append(mosek.boundkey.fx)
-                blx.append(bound['value'])
-                bux.append(bound['value'])
-
-        # Número de restrições
-        numcon = len(problem['constraints'])
-        task.appendcons(numcon)
-        task.appendvars(numvar)
-
-        # Configurar os limites das variáveis no MOSEK
-        for j in range(numvar):
-            task.putcj(j, c[j])
-            task.putvarbound(j, bkx[j], blx[j], bux[j])
-            # Definir tipo de variável como inteiro se especificado
-            if 'integer' in problem['variables'] and j in problem['variables']['integer']:
-                task.putvartype(j, mosek.variabletype.type_int)
-            # Definir tipo de variável como binário se especificado
-            if 'binary' in problem['variables'] and j in problem['variables']['binary']:
-                task.putvartype(j, mosek.variabletype.type_int)
-                task.putvarbound(j, mosek.boundkey.ra, 0, 1)  # Definir limites para variáveis binárias
-
-        # Configurar restrições
-        for i, constraint in enumerate(problem['constraints']):
-            coef = constraint['coefficients']
-            asub = [j for j, a in enumerate(coef) if a != 0]
-            aval = [a for a in coef if a != 0]
-            bound = constraint['bound']
-            if bound['type'] == 'eq':
-                task.putconbound(i, mosek.boundkey.fx, bound['value'], bound['value'])
-            elif bound['type'] == 'ge':
-                task.putconbound(i, mosek.boundkey.lo, bound['value'], inf)
-            elif bound['type'] == 'le':
-                task.putconbound(i, mosek.boundkey.up, -inf, bound['value'])
-            task.putarow(i, asub, aval)
-
-        # Otimiza o problema
-        task.optimize()
-        task.solutionsummary(mosek.streamtype.msg)
-
-        # Obtém o status da solução
-        solsta = task.getsolsta(mosek.soltype.itg if 'integer' in problem['variables'] or 'binary' in problem['variables'] else mosek.soltype.bas)
-        if solsta == mosek.solsta.optimal:
-            xx = task.getxx(mosek.soltype.itg if 'integer' in problem['variables'] or 'binary' in problem['variables'] else mosek.soltype.bas)
-            return {"status": "optimal", "solution": xx.tolist()}
-        elif solsta in (mosek.solsta.dual_infeas_cer, mosek.solsta.prim_infeas_cer):
-            return {"status": "infeasible"}
-        else:
-            return {"status": "unknown"}
 
 # Função principal para lidar com argumentos da linha de comando e executar o solver
 def main():
@@ -117,8 +29,13 @@ def main():
     try:
         # Lê o problema do arquivo de entrada
         problem = read_problem_from_json(args.input_file)
+        # Encontra as variáveis para resolver o problema
+        sense, c, bkx, blx, bux, bkc, blc, buc, asub, aval, vartypes = transform_problem_to_mosek(problem)
         # Resolve o problema e obtém a solução
-        result = solve_problem(problem)
+        if vartypes:
+            result = solve_problem_integer(sense, c, bkx, blx, bux, bkc, blc, buc, asub, aval, vartypes)
+        else:
+            result = solve_problem_continuos(sense, c, bkx, blx, bux, bkc, blc, buc, asub, aval)
         if result["status"] == "optimal":
             print("Solução ótima encontrada:")
             for i, val in enumerate(result["solution"]):
