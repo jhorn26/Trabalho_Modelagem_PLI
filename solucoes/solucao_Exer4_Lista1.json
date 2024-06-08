@@ -1,0 +1,56 @@
+{
+    "objective": {
+        "sense": "maximize",
+        "coefficients": [
+            5.0,
+            4.0
+        ]
+    },
+    "variables": {
+        "bounds": [
+            {
+                "type": "lo",
+                "lower": 0.0,
+                "upper": "inf"
+            },
+            {
+                "type": "lo",
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        ],
+        "integer": [
+            0,
+            1
+        ]
+    },
+    "constraints": [
+        {
+            "coefficients": [
+                2.0,
+                1.0
+            ],
+            "bound": {
+                "type": "le",
+                "value": 78.0
+            }
+        },
+        {
+            "coefficients": [
+                5.0,
+                6.0
+            ],
+            "bound": {
+                "type": "le",
+                "value": 300.0
+            }
+        }
+    ],
+    "solution": {
+        "status": "optimal",
+        "solution": [
+            24.0,
+            30.0
+        ]
+    }
+}
