@@ -1,0 +1,39 @@
+{
+    "objective": {
+      "sense": "minimize",
+      "coefficients": [1.0, 1.5, 3.5, 2.0, 1.0, 2.0]
+    },
+    "variables": {
+      "bounds":[
+        {"type": "lo", "lower": 0.0, "upper": "inf"},
+        {"type": "lo", "lower": 0.0, "upper": "inf"},
+        {"type": "lo", "lower": 0.0, "upper": "inf"},
+        {"type": "lo", "lower": 0.0, "upper": "inf"},
+        {"type": "lo", "lower": 0.0, "upper": "inf"},
+        {"type": "lo", "lower": 0.0, "upper": "inf"}
+      ],
+      "integer": [0,1,2,3,4,5]
+    },
+    "constraints": [
+      {
+        "coefficients": [1.0, 0.0, 0.0, 1.0, 0.0, 0.0],
+        "bound": {"type": "eq", "value": 100.0}
+      },
+      {
+        "coefficients": [0.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+        "bound": {"type": "eq", "value": 200.0}
+      },
+      {
+        "coefficients": [0.0, 0.0, 1.0, 0.0, 0.0, 1.0],
+        "bound": {"type": "eq", "value": 300.0}
+      },
+      {
+        "coefficients": [1.0, 1.0, 1.0, 0.0, 0.0, 0.0],
+        "bound": {"type": "le", "value": 400.0}
+      },
+      {
+        "coefficients": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0],
+        "bound": {"type": "le", "value": 300.0}
+      }
+    ]
+  }
