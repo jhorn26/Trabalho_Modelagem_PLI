@@ -16,13 +16,13 @@ Este repositório contém a Avaliação 2 da disciplina de Programação Linear 
 
 ## Instruções de Execução
 
-**Clonar o repositório:**
+1. **Clonar o repositório:**
     ```sh
     git clone https://github.com/jhorn26/Trabalho_Modelagem_PLI.git
     cd Trabalho_Modelagem_PLI
     ```
 
-**Executar os scripts:**
+2. **Executar os scripts:**
     A `main.py` necessita de dois argumentos, `.json` com o caminho do problema e o caminho para solução, também em `.json`. Por exemplo:
     ```sh
     python main.py problemas/exercicio.json solucoes/solucao_exercicio.json
