@@ -11,15 +11,15 @@ Este repositório contém a Avaliação 2 da disciplina de Programação Linear 
 - `exemplos/`: Exemplos da utilização do código.
 - `exercicios e gabarito/`: Exercícios a serem resolvidos, com suas respectivas modelagens na linguagem de PLI.
 - `problemas/`: Contém os exercícios modelados, no formato JSON, que serão usados no código.
-- `scripts/`: Contém funções úteis para a main.py.
+- `scripts/`: Contém funções auxiliares para a main.py.
 - `solucoes/`: Contém os resultados gerados.
 
 ## Instruções de Execução
 
 1. **Clonar o repositório:**
     ```sh
-    git clone https://github.com/seu-usuario/seu-repositorio.git
-    cd seu-repositorio
+    git clone https://github.com/jhorn26/Trabalho_Modelagem_PLI.git
+    cd Trabalho_Modelagem_PLI
     ```
 
 2. **Instalar as dependências:**
@@ -29,17 +29,10 @@ Este repositório contém a Avaliação 2 da disciplina de Programação Linear 
     source venv/bin/activate  # No Windows, use `venv\Scripts\activate`
     pip install -r requirements.txt
     ```
-
-3. **Executar os notebooks:**
-    Navegue até o diretório `notebooks` e abra os notebooks Jupyter para visualizar e executar o código. Você pode iniciar o Jupyter Notebook com o seguinte comando:
+3. **Executar os scripts:**
+    A `main.py` necessita de dois argumentos, `.json` com o caminho do problema e o caminho para solução, também em `.json`. Por exemplo:
     ```sh
-    jupyter notebook
-    ```
-
-4. **Executar os scripts:**
-    Navegue até o diretório `scripts` e execute os scripts Python conforme necessário. Por exemplo:
-    ```sh
-    python scripts/seu_script.py
+    python main.py problemas/exercicio.json solucoes/solucao_exercicio.json
     ```
     
 ## Autores
