@@ -16,20 +16,13 @@ Este repositório contém a Avaliação 2 da disciplina de Programação Linear 
 
 ## Instruções de Execução
 
-1. **Clonar o repositório:**
+**Clonar o repositório:**
     ```sh
     git clone https://github.com/jhorn26/Trabalho_Modelagem_PLI.git
     cd Trabalho_Modelagem_PLI
     ```
 
-2. **Instalar as dependências:**
-    Recomendamos o uso de um ambiente virtual para gerenciar as dependências do projeto. Para criar e ativar um ambiente virtual, execute:
-    ```sh
-    python -m venv venv
-    source venv/bin/activate  # No Windows, use `venv\Scripts\activate`
-    pip install -r requirements.txt
-    ```
-3. **Executar os scripts:**
+**Executar os scripts:**
     A `main.py` necessita de dois argumentos, `.json` com o caminho do problema e o caminho para solução, também em `.json`. Por exemplo:
     ```sh
     python main.py problemas/exercicio.json solucoes/solucao_exercicio.json
