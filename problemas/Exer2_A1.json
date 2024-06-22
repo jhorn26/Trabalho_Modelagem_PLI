@@ -10,6 +10,7 @@
         {"type": "lo", "lower": 0.0, "upper": "inf"},
         {"type": "lo", "lower": 0.0, "upper": "inf"},
         {"type": "lo", "lower": 0.0, "upper": "inf"},
+        {"type": "lo", "lower": 0.0, "upper": "inf"},
         {"type": "lo", "lower": 0.0, "upper": "inf"}
       ],
       "integer": [0,1,2,3,4,5]
